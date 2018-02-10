@@ -1,7 +1,6 @@
 package com.rawad.main;
 
 import com.rawad.controller.GameController;
-import com.rawad.model.GameModel;
 import com.rawad.view.GameView;
 
 /**
@@ -15,8 +14,7 @@ public class AppStart {
    */
   public static void main(String[] args) {
 
-    GameModel gameModel = new GameModel();
-    GameView gameView = new GameView(gameModel);
+    GameView gameView = new GameView();
 
     GameController controller = new GameController();
 

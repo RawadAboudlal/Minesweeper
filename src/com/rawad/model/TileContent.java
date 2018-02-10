@@ -6,6 +6,7 @@ package com.rawad.model;
  */
 public enum TileContent {
 
-  ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NONE, BOMB;
+  ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NONE, MINE;
+
 
 }

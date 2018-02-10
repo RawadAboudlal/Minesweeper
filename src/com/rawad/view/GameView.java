@@ -3,6 +3,7 @@ package com.rawad.view;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,6 +11,7 @@ import javax.swing.JPanel;
 import com.rawad.controller.GameController;
 import com.rawad.controller.UIController;
 import com.rawad.model.GameModel;
+import com.rawad.model.Tile;
 
 /**
  * @author Rawad
@@ -24,6 +26,8 @@ public class GameView {
 
   private static final int DEFAULT_WIDTH = 640;
   private static final int DEFAULT_HEIGHT = 480;
+
+  private static final int TILE_GAP = 3;
 
   private JFrame frame;
 
@@ -86,6 +90,8 @@ public class GameView {
 
     basePanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
+    uiController.addFrame(frame);
+
     frame.pack();
 
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -93,9 +99,34 @@ public class GameView {
 
   }
 
-  public void showGamePanel(GameModel gameModel) {
+  public void createGamePanel(GameModel gameModel) {
 
     this.gameModel = gameModel;
+
+    JPanel boardPanel = new JPanel();
+    GridLayout boardLayout = new GridLayout(gameModel.getDifficulty().getHeight(),
+        gameModel.getDifficulty().getWidth(), TILE_GAP, TILE_GAP);
+
+    boardPanel.setLayout(boardLayout);
+
+    Tile[][] board = gameModel.getBoard();
+
+    for (int y = 0; y < board.length; y++) {
+
+      Tile[] row = board[y];
+
+      for (int x = 0; x < row.length; x++) {
+
+        Tile tile = row[x];
+
+        TileView tileView = new TileView(tile);
+
+        uiController.addTileView(tileView);;
+
+        boardPanel.add(tileView);
+
+      }
+    }
 
     cardLayout.show(basePanel, GAME);
 

@@ -1,5 +1,6 @@
 package com.rawad.controller;
 
+import java.util.Random;
 import com.rawad.model.GameModel;
 import com.rawad.model.Tile;
 import com.rawad.model.TileContent;
@@ -14,17 +15,32 @@ public class GameController {
 
   private GameModel model;
 
+  private Random random;
+
   public void initializeGame(Difficulty difficulty) {
 
     model = new GameModel();
 
     model.setDifficulty(difficulty);
-
     model.setBoard(GameController.generateEmptyBoard(difficulty));
+
+    random = new Random();
 
   }
 
   public void stopGame() {
+
+    model = null;
+
+    random = null;
+
+  }
+
+  public void revealTile(Tile tile) {
+
+  }
+
+  public void toggleTileMarked(Tile tile) {
 
   }
 

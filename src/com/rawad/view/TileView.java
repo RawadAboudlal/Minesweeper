@@ -22,7 +22,7 @@ public class TileView extends JButton {
    */
   private static final long serialVersionUID = 3353075477507007301L;
 
-  private Tile tile;
+  private final Tile tile;
 
   public TileView(Tile tile) {
     super();
@@ -82,7 +82,7 @@ public class TileView extends JButton {
         break;
       case EIGHT:
         s = "8";
-      case BOMB:
+      case MINE:
         g.setColor(Color.BLACK);
         g.fillOval(0, 0, this.getWidth(), this.getHeight());
         return;
@@ -91,6 +91,13 @@ public class TileView extends JButton {
     g.setColor(Color.BLACK);
     g.drawString(s, 0, this.getHeight());
 
+  }
+
+  /**
+   * @return the tile
+   */
+  public Tile getTile() {
+    return tile;
   }
 
 }

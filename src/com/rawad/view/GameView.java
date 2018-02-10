@@ -90,6 +90,8 @@ public class GameView {
 
     basePanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
+    frame.setContentPane(basePanel);
+
     uiController.addFrame(frame);
 
     frame.pack();

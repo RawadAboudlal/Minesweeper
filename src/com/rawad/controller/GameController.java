@@ -1,5 +1,6 @@
 package com.rawad.controller;
 
+import java.util.ArrayDeque;
 import java.util.Random;
 import com.rawad.model.GameModel;
 import com.rawad.model.Tile;
@@ -52,6 +53,63 @@ public class GameController {
   }
 
   private void tileRevealed(Tile tile) {
+
+    if (tile.getContent() == TileContent.MINE) {
+      // game over
+    } else if (tile.getContent() == TileContent.NONE) {
+      this.reavealNeighboringTiles(tile);
+    }
+
+  }
+
+  private void reavealNeighboringTiles(Tile tile) {
+
+    ArrayDeque<Tile> tilesToCheck = new ArrayDeque<Tile>();
+    ArrayDeque<Tile> checkedTiles = new ArrayDeque<Tile>();
+
+    tilesToCheck.push(tile);
+
+    while (!tilesToCheck.isEmpty()) {
+
+      Tile currentTile = tilesToCheck.pop();
+
+      if (checkedTiles.contains(currentTile)) {
+        continue;
+      }
+
+      for (int deltaX = -1; deltaX <= 1; deltaX++) {
+
+        int x = currentTile.getX() + deltaX;
+
+        if (x < 0 || x >= model.getDifficulty().getWidth()) {
+          continue;
+        }
+
+        for (int deltaY = -1; deltaY <= 1; deltaY++) {
+
+          int y = currentTile.getY() + deltaY;
+
+          if (y < 0 || y >= model.getDifficulty().getHeight()) {
+            continue;
+          }
+
+          Tile tileToCheck = model.getBoard()[y][x];
+
+          if (tileToCheck.getContent() == TileContent.NONE) {
+            tileToCheck.setState(TileState.OPENED);
+            tilesToCheck.push(tileToCheck);
+          } else if (tileToCheck.getContent() == TileContent.MINE) {
+            continue;
+          } else {
+            tileToCheck.setState(TileState.OPENED);
+          }
+
+        }
+      }
+
+      checkedTiles.push(currentTile);
+
+    }
 
   }
 

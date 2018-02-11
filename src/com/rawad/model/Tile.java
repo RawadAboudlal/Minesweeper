@@ -10,7 +10,7 @@ public class Tile {
   private int x;
   private int y;
 
-  private TileContent content;
+  private int content;
 
   private TileState state;
 
@@ -49,7 +49,7 @@ public class Tile {
   /**
    * @return the content
    */
-  public TileContent getContent() {
+  public int getContent() {
     return content;
   }
 
@@ -57,7 +57,7 @@ public class Tile {
   /**
    * @param content the content to set
    */
-  public void setContent(TileContent content) {
+  public void setContent(int content) {
     this.content = content;
   }
 

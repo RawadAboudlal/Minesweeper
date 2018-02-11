@@ -38,9 +38,35 @@ public class GameController {
 
   public void revealTile(Tile tile) {
 
+    switch (tile.getState()) {
+      case COVERED:
+        tile.setState(TileState.OPENED);
+
+        this.tileRevealed(tile);
+
+      case FLAGGED:
+      case OPENED:
+        break;
+    }
+
+  }
+
+  private void tileRevealed(Tile tile) {
+
   }
 
   public void toggleTileMarked(Tile tile) {
+
+    switch (tile.getState()) {
+      case COVERED:
+        tile.setState(TileState.FLAGGED);
+        break;
+      case FLAGGED:
+        tile.setState(TileState.COVERED);
+        break;
+      case OPENED:
+        break;
+    }
 
   }
 

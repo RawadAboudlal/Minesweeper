@@ -75,6 +75,7 @@ public class GameView {
     uiController.addEasyButton(easyDifficultyButton);
     uiController.addMediumButton(mediumDifficultyButton);
     uiController.addHardButton(hardDifficultyButton);
+    uiController.addQuitButton(quitButton);
 
     menuPanel.add(easyDifficultyButton);
     menuPanel.add(mediumDifficultyButton);
@@ -95,6 +96,7 @@ public class GameView {
     uiController.addFrame(frame);
 
     frame.pack();
+    frame.setLocationByPlatform(true);
 
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.setVisible(true);
@@ -130,12 +132,23 @@ public class GameView {
       }
     }
 
+    gamePanel.add(boardPanel);
+
     cardLayout.show(basePanel, GAME);
+
+    frame.pack();
 
   }
 
   public void showMenuPanel() {
     cardLayout.show(basePanel, MENU);
+
+    frame.pack();
+
+  }
+
+  public void stop() {
+    frame.dispose();
   }
 
 }

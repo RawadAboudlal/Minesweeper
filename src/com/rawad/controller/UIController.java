@@ -60,7 +60,7 @@ public class UIController {
 
     quitButton.addActionListener((e) -> {
       gameController.stopGame();
-      gameView.showMenuPanel();
+      gameView.stop();
     });
 
   }
@@ -84,11 +84,15 @@ public class UIController {
       @Override
       public void mouseClicked(MouseEvent e) {
 
+        TileView tile = (TileView) e.getSource();
+
         if (e.getButton() == MouseEvent.BUTTON1) {
-          gameController.revealTile(((TileView) e.getSource()).getTile());
+          gameController.revealTile(tile.getTile());
         } else if (e.getButton() == MouseEvent.BUTTON2) {
-          gameController.toggleTileMarked(((TileView) e.getSource()).getTile());
+          gameController.toggleTileMarked(tile.getTile());
         }
+
+        tile.repaint();
 
       }
 
@@ -108,7 +112,7 @@ public class UIController {
 
         gameController.stopGame();
 
-        frame.dispose();
+        gameView.stop();
 
       }
 

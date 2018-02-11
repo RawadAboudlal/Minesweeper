@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JButton;
 import com.rawad.model.Tile;
+import com.rawad.model.TileContent;
 
 /**
  * @author Rawad
@@ -12,8 +13,8 @@ import com.rawad.model.Tile;
  */
 public class TileView extends JButton {
 
-  private static final int DEFAULT_WIDTH = 16;
-  private static final int DEFAULT_HEIGHT = 16;
+  private static final int DEFAULT_WIDTH = 20;
+  private static final int DEFAULT_HEIGHT = 20;
 
   private static final int ROUNDNESS = 5;
 
@@ -42,47 +43,31 @@ public class TileView extends JButton {
       case COVERED:
         g.setColor(Color.GRAY);
         g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ROUNDNESS, ROUNDNESS);
+        break;
       case FLAGGED:
         g.setColor(Color.RED);
         g.drawOval(0, 0, this.getWidth(), this.getHeight());
         break;
       case OPENED:
+
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ROUNDNESS, ROUNDNESS);
+
         this.paintOpened(g);
+
+        break;
     }
 
   }
 
   private void paintOpened(Graphics g) {
 
-    String s = "";
+    String s = tile.getContent() + "";
 
     switch (tile.getContent()) {
-      case NONE:
-        break;
-      case ONE:
-        s = "1";
-        break;
-      case TWO:
-        s = "2";
-        break;
-      case THREE:
-        s = "3";
-        break;
-      case FOUR:
-        s = "4";
-        break;
-      case FIVE:
-        s = "5";
-        break;
-      case SIX:
-        s = "6";
-        break;
-      case SEVEN:
-        s = "7";
-        break;
-      case EIGHT:
-        s = "8";
-      case MINE:
+      case TileContent.NONE:
+        return;
+      case TileContent.MINE:
         g.setColor(Color.BLACK);
         g.fillOval(0, 0, this.getWidth(), this.getHeight());
         return;

@@ -40,6 +40,8 @@ public class GameView {
 
   private UIController uiController;
 
+  private TileView[][] tileViews;
+
   private GameModel gameModel;
 
   /**
@@ -115,6 +117,9 @@ public class GameView {
 
     Tile[][] board = gameModel.getBoard();
 
+    tileViews =
+        new TileView[gameModel.getDifficulty().getHeight()][gameModel.getDifficulty().getWidth()];
+
     for (int y = 0; y < board.length; y++) {
 
       Tile[] row = board[y];
@@ -124,8 +129,9 @@ public class GameView {
         Tile tile = row[x];
 
         TileView tileView = new TileView(tile);
+        tileViews[y][x] = tileView;
 
-        uiController.addTileView(tileView);;
+        uiController.addTileView(tileView);
 
         boardPanel.add(tileView);
 
@@ -145,6 +151,10 @@ public class GameView {
 
     frame.pack();
 
+  }
+
+  public void updateTile(Tile tile) {
+    tileViews[tile.getY()][tile.getX()].repaint();
   }
 
   public void stop() {

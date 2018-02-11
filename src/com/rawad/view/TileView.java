@@ -2,8 +2,9 @@ package com.rawad.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
-import javax.swing.JButton;
+import javax.swing.JPanel;
 import com.rawad.model.Tile;
 import com.rawad.model.TileContent;
 
@@ -11,7 +12,7 @@ import com.rawad.model.TileContent;
  * @author Rawad
  *
  */
-public class TileView extends JButton {
+public class TileView extends JPanel {
 
   private static final int DEFAULT_WIDTH = 20;
   private static final int DEFAULT_HEIGHT = 20;
@@ -41,17 +42,15 @@ public class TileView extends JButton {
 
     switch (tile.getState()) {
       case COVERED:
-        g.setColor(Color.GRAY);
-        g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ROUNDNESS, ROUNDNESS);
+        this.paintCovered(g);
         break;
       case FLAGGED:
+        this.paintCovered(g);
+
         g.setColor(Color.RED);
         g.drawOval(0, 0, this.getWidth(), this.getHeight());
         break;
       case OPENED:
-
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ROUNDNESS, ROUNDNESS);
 
         this.paintOpened(g);
 
@@ -60,7 +59,15 @@ public class TileView extends JButton {
 
   }
 
+  private void paintCovered(Graphics g) {
+    g.setColor(Color.GRAY);
+    g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ROUNDNESS, ROUNDNESS);
+  }
+
   private void paintOpened(Graphics g) {
+
+    g.setColor(Color.LIGHT_GRAY);
+    g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ROUNDNESS, ROUNDNESS);
 
     String s = tile.getContent() + "";
 
@@ -73,8 +80,11 @@ public class TileView extends JButton {
         return;
     }
 
+    FontMetrics fm = g.getFontMetrics();
+
     g.setColor(Color.BLACK);
-    g.drawString(s, 0, this.getHeight());
+    g.drawString(s, (this.getWidth() / 2) + (fm.stringWidth(s) / 2),
+        (this.getHeight() / 2) + (fm.getHeight() / 2));
 
   }
 

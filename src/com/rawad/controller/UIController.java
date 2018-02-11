@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import com.rawad.model.Tile;
 import com.rawad.utils.Difficulty;
 import com.rawad.view.GameView;
 import com.rawad.view.TileView;
@@ -87,12 +88,21 @@ public class UIController {
         TileView tile = (TileView) e.getSource();
 
         if (e.getButton() == MouseEvent.BUTTON1) {
-          gameController.revealTile(tile.getTile());
-        } else if (e.getButton() == MouseEvent.BUTTON2) {
-          gameController.toggleTileMarked(tile.getTile());
-        }
 
-        tile.repaint();
+          Tile[] tilesToUpdate = gameController.revealTile(tile.getTile());
+
+          for (Tile tileToUpdate : tilesToUpdate) {
+            gameView.updateTile(tileToUpdate);
+          }
+
+        } else if (e.getButton() == MouseEvent.BUTTON3) {
+
+          gameController.toggleTileMarked(tile.getTile());
+          gameView.updateTile(tile.getTile());
+
+          tile.repaint();
+
+        }
 
       }
 

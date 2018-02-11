@@ -1,6 +1,7 @@
 package com.rawad.controller;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Random;
 import com.rawad.model.GameModel;
 import com.rawad.model.Tile;
@@ -18,6 +19,8 @@ public class GameController {
 
   private Random random;
 
+  private boolean firstTile;
+
   public void initializeGame(Difficulty difficulty) {
 
     model = new GameModel();
@@ -26,6 +29,8 @@ public class GameController {
     model.setBoard(GameController.generateEmptyBoard(difficulty));
 
     random = new Random();
+
+    firstTile = true;
 
   }
 
@@ -37,51 +42,86 @@ public class GameController {
 
   }
 
-  public void revealTile(Tile tile) {
+  public Tile[] revealTile(Tile tile) {
 
     switch (tile.getState()) {
       case COVERED:
+
         tile.setState(TileState.OPENED);
 
-        this.tileRevealed(tile);
+        if (firstTile) {
+
+          tile.setContent(TileContent.NONE);
+
+          this.generateBoard();
+
+          firstTile = false;
+
+        }
+
+        return this.tileRevealed(tile);
 
       case FLAGGED:
       case OPENED:
         break;
     }
 
+    return new Tile[0];
+
   }
 
-  private void tileRevealed(Tile tile) {
+  private Tile[] tileRevealed(Tile tile) {
 
     if (tile.getContent() == TileContent.MINE) {
       // game over
     } else if (tile.getContent() == TileContent.NONE) {
-      this.reavealNeighboringTiles(tile);
+      return this.reavealNeighboringTiles(tile);
     }
+
+    return new Tile[] {tile};
 
   }
 
-  private void reavealNeighboringTiles(Tile tile) {
+  /**
+   * <p>
+   * Goes through all the tiles neighboring {@code tile} and reveals them based on the following
+   * rules:
+   * <ol>
+   * <li>We check the 8 tiles around the starting {@code tile}, by going from -1 to +1 x and -1 to
+   * +1 y.</li>
+   * <li>If the expected position is outside the range of the board, we skip that tile.</li>
+   * <li>If the new tile is open or flagged we skip it. If it covered we open it.</li>
+   * <li>If this newly opened tile has no neighbouring mines (a {@code TIleContent} of {@code NONE})
+   * we will open all neighbouring tiles as well until only numbered tiles are opened or the edge is
+   * reached.</li>
+   * </ol>
+   * </p>
+   * 
+   * <p>
+   * This method will return all the tiles that were revealed.
+   * </P>
+   * 
+   * @param tile
+   * @return
+   */
+  private Tile[] reavealNeighboringTiles(Tile tile) {
 
     ArrayDeque<Tile> tilesToCheck = new ArrayDeque<Tile>();
-    ArrayDeque<Tile> checkedTiles = new ArrayDeque<Tile>();
+    ArrayList<Tile> checkedTiles = new ArrayList<Tile>();
+    ArrayList<Tile> updatedTiles = new ArrayList<Tile>();
 
     tilesToCheck.push(tile);
+    updatedTiles.add(tile);
 
     while (!tilesToCheck.isEmpty()) {
 
       Tile currentTile = tilesToCheck.pop();
 
-      if (checkedTiles.contains(currentTile)) {
-        continue;
-      }
-
       for (int deltaX = -1; deltaX <= 1; deltaX++) {
 
         int x = currentTile.getX() + deltaX;
 
-        if (x < 0 || x >= model.getDifficulty().getWidth()) {
+        if (!this.isXOnBoard(x)) {
           continue;
         }
 
@@ -89,27 +129,51 @@ public class GameController {
 
           int y = currentTile.getY() + deltaY;
 
-          if (y < 0 || y >= model.getDifficulty().getHeight()) {
+          if (!this.isYOnBoard(y)) {
+            continue;
+          }
+
+          // Skip if original, center tile which wass already previously opened.
+          if (deltaX == 0 && deltaY == 0) {
             continue;
           }
 
           Tile tileToCheck = model.getBoard()[y][x];
 
+          if (checkedTiles.contains(tileToCheck)) {
+            continue;
+          }
+
+          if (tileToCheck.getState() != TileState.COVERED) {
+            continue;
+          }
+
           if (tileToCheck.getContent() == TileContent.NONE) {
+
             tileToCheck.setState(TileState.OPENED);
+            // All tiles next an open tile are good so they should be opened as well.
             tilesToCheck.push(tileToCheck);
+
+            updatedTiles.add(tileToCheck);
+
           } else if (tileToCheck.getContent() == TileContent.MINE) {
             continue;
           } else {
+
             tileToCheck.setState(TileState.OPENED);
+
+            updatedTiles.add(tileToCheck);
+
           }
+
+          checkedTiles.add(tileToCheck);
 
         }
       }
 
-      checkedTiles.push(currentTile);
-
     }
+
+    return updatedTiles.toArray(new Tile[updatedTiles.size()]);
 
   }
 
@@ -152,16 +216,68 @@ public class GameController {
 
   }
 
-  public static Tile[][] generateBoard(Tile[][] board, Difficulty difficulty) {
+  public void generateBoard() {
 
-    for (int y = 0; y < board.length; y++) {
-      for (int x = 0; x < board[y].length; x++) {
-        // TODO: Board generator.
+    Difficulty difficulty = model.getDifficulty();
+
+    Tile[][] board = model.getBoard();
+
+    for (int numberOfMinesGenerated = 0; numberOfMinesGenerated < difficulty.getNumberOfMines();) {
+
+      int x = random.nextInt(difficulty.getWidth());
+      int y = random.nextInt(difficulty.getWidth());
+
+      Tile tile = board[y][x];
+
+      if (tile.getState() == TileState.COVERED && tile.getContent() == TileContent.NONE
+          && tile.getContent() != TileContent.MINE) {
+
+        tile.setContent(TileContent.MINE);
+
+        numberOfMinesGenerated++;
+
+        // Update all surrounding tiles (telling them there is another mine here).
+        for (int deltaX = -1; deltaX <= 1; deltaX++) {
+
+          int newX = x + deltaX;
+
+          if (!this.isXOnBoard(newX)) {
+            continue;
+          }
+
+          for (int deltaY = -1; deltaY <= 1; deltaY++) {
+
+            int newY = y + deltaY;
+
+            if (!this.isYOnBoard(newY)) {
+              continue;
+            }
+
+            if (deltaX == 0 && deltaY == 0) {
+              continue;
+            }
+
+            Tile tileToIncrement = board[newY][newX];
+
+            if (tileToIncrement.getContent() != TileContent.MINE) {
+              tileToIncrement.setContent(tileToIncrement.getContent() + 1);
+            }
+
+          }
+        }
+
       }
+
     }
 
-    return board;
+  }
 
+  private boolean isXOnBoard(int x) {
+    return x >= 0 && x < model.getDifficulty().getWidth();
+  }
+
+  private boolean isYOnBoard(int y) {
+    return y >= 0 && y < model.getDifficulty().getHeight();
   }
 
   /**

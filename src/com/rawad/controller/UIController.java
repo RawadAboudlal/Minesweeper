@@ -97,7 +97,7 @@ public class UIController {
 
         } else if (e.getButton() == MouseEvent.BUTTON3) {
 
-          gameController.toggleTileMarked(tile.getTile());
+          gameController.toggleTileFlagged(tile.getTile());
           gameView.updateTile(tile.getTile());
 
           tile.repaint();

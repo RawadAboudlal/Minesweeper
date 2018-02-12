@@ -19,6 +19,8 @@ public class GameController {
 
   private Random random;
 
+  private int flaggedTiles;
+
   private boolean firstTile;
 
   public void initializeGame(Difficulty difficulty) {
@@ -29,6 +31,8 @@ public class GameController {
     model.setBoard(GameController.generateEmptyBoard(difficulty));
 
     random = new Random();
+
+    flaggedTiles = 0;
 
     firstTile = true;
 
@@ -177,14 +181,16 @@ public class GameController {
 
   }
 
-  public void toggleTileMarked(Tile tile) {
+  public void toggleTileFlagged(Tile tile) {
 
     switch (tile.getState()) {
       case COVERED:
         tile.setState(TileState.FLAGGED);
+        flaggedTiles++;
         break;
       case FLAGGED:
         tile.setState(TileState.COVERED);
+        flaggedTiles--;
         break;
       case OPENED:
         break;
@@ -285,6 +291,13 @@ public class GameController {
    */
   public GameModel getModel() {
     return model;
+  }
+
+  /**
+   * @return the flaggedTiles
+   */
+  public int getFlaggedTiles() {
+    return flaggedTiles;
   }
 
 }

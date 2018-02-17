@@ -1,4 +1,4 @@
-package com.rawad.model;
+package com.minesweeper.model;
 
 /**
  * @author Rawad

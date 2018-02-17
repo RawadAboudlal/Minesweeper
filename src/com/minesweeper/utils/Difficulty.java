@@ -1,4 +1,4 @@
-package com.rawad.utils;
+package com.minesweeper.utils;
 
 /**
  * @author Rawad

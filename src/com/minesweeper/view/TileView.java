@@ -1,12 +1,12 @@
-package com.rawad.view;
+package com.minesweeper.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import javax.swing.JPanel;
-import com.rawad.model.Tile;
-import com.rawad.model.TileContent;
+import com.minesweeper.model.Tile;
+import com.minesweeper.model.TileContent;
 
 /**
  * @author Rawad

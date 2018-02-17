@@ -1,13 +1,13 @@
-package com.rawad.controller;
+package com.minesweeper.controller;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Random;
-import com.rawad.model.GameModel;
-import com.rawad.model.Tile;
-import com.rawad.model.TileContent;
-import com.rawad.model.TileState;
-import com.rawad.utils.Difficulty;
+import com.minesweeper.model.GameModel;
+import com.minesweeper.model.Tile;
+import com.minesweeper.model.TileContent;
+import com.minesweeper.model.TileState;
+import com.minesweeper.utils.Difficulty;
 
 /**
  * @author Rawad

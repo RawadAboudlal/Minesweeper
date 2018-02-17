@@ -1,6 +1,6 @@
-package com.rawad.model;
+package com.minesweeper.model;
 
-import com.rawad.utils.Difficulty;
+import com.minesweeper.utils.Difficulty;
 
 /**
  * @author Rawad

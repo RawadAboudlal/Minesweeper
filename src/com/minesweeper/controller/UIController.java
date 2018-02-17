@@ -1,4 +1,4 @@
-package com.rawad.controller;
+package com.minesweeper.controller;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -6,10 +6,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import com.rawad.model.Tile;
-import com.rawad.utils.Difficulty;
-import com.rawad.view.GameView;
-import com.rawad.view.TileView;
+import com.minesweeper.controller.GameController;
+import com.minesweeper.model.Tile;
+import com.minesweeper.utils.Difficulty;
+import com.minesweeper.view.GameView;
+import com.minesweeper.view.TileView;
 
 /**
  * @author Rawad

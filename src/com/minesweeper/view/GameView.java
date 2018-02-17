@@ -1,4 +1,4 @@
-package com.rawad.view;
+package com.minesweeper.view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -8,10 +8,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import com.rawad.controller.GameController;
-import com.rawad.controller.UIController;
-import com.rawad.model.GameModel;
-import com.rawad.model.Tile;
+import com.minesweeper.controller.GameController;
+import com.minesweeper.controller.UIController;
+import com.minesweeper.model.GameModel;
+import com.minesweeper.model.Tile;
 
 /**
  * @author Rawad

@@ -1,7 +1,7 @@
-package com.rawad.main;
+package com.minesweeper.main;
 
-import com.rawad.controller.GameController;
-import com.rawad.view.GameView;
+import com.minesweeper.controller.GameController;
+import com.minesweeper.view.GameView;
 
 /**
  * @author Rawad

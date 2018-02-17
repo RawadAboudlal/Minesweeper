@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import com.minesweeper.controller.GameController;
 import com.minesweeper.controller.UIController;
@@ -36,7 +37,11 @@ public class GameView {
   private JPanel menuPanel;
   private JPanel gamePanel;
 
+  private JPanel boardPanel;
+  private JLabel flaggedLabel;
+
   private CardLayout cardLayout;
+  private GridLayout boardLayout;
 
   private UIController uiController;
 
@@ -52,6 +57,8 @@ public class GameView {
   public void initialize(GameController gameController) {
 
     uiController = new UIController(gameController, this);
+
+    this.gameModel = gameController.getModel();
 
     EventQueue.invokeLater(() -> {
       GameView.this.initGui();
@@ -84,6 +91,8 @@ public class GameView {
     menuPanel.add(hardDifficultyButton);
     menuPanel.add(quitButton);
 
+    this.createGamePanel();
+
     cardLayout = new CardLayout();
 
     basePanel.setLayout(cardLayout);
@@ -105,17 +114,46 @@ public class GameView {
 
   }
 
-  public void createGamePanel(GameModel gameModel) {
+  private void createGamePanel() {
 
-    this.gameModel = gameModel;
-
-    JPanel boardPanel = new JPanel();
-    GridLayout boardLayout = new GridLayout(gameModel.getDifficulty().getHeight(),
-        gameModel.getDifficulty().getWidth(), TILE_GAP, TILE_GAP);
+    boardPanel = new JPanel();
+    boardLayout = new GridLayout(1, 1, TILE_GAP, TILE_GAP);
 
     boardPanel.setLayout(boardLayout);
 
+    gamePanel.add(boardPanel);
+
+    JPanel userFeedbackPanel = new JPanel();
+
+    BoxLayout userFeedbackLayout = new BoxLayout(userFeedbackPanel, BoxLayout.PAGE_AXIS);
+    userFeedbackPanel.setLayout(userFeedbackLayout);
+
+    flaggedLabel = new JLabel();
+    this.updateNumberOfFlagged(0, 0);
+
+    userFeedbackPanel.add(flaggedLabel);
+
+    JButton resetButton = new JButton("Reset");
+    JButton changeDifficultyButton = new JButton("Change Difficulty");
+
+    uiController.addResetButton(resetButton);
+    uiController.addChangeDifficultyButton(changeDifficultyButton);
+
+    userFeedbackPanel.add(resetButton);
+    userFeedbackPanel.add(changeDifficultyButton);
+
+    gamePanel.add(userFeedbackPanel);
+
+  }
+
+  public void setupGame() {
+
+    boardPanel.removeAll();
+
     Tile[][] board = gameModel.getBoard();
+
+    boardLayout.setColumns(gameModel.getDifficulty().getWidth());
+    boardLayout.setRows(gameModel.getDifficulty().getHeight());
 
     tileViews =
         new TileView[gameModel.getDifficulty().getHeight()][gameModel.getDifficulty().getWidth()];
@@ -138,11 +176,22 @@ public class GameView {
       }
     }
 
-    gamePanel.add(boardPanel);
+    this.updateNumberOfFlagged(uiController.getGameController().getFlaggedTiles(),
+        gameModel.getDifficulty().getNumberOfMines());
 
-    cardLayout.show(basePanel, GAME);
+  }
 
-    frame.pack();
+  public void reset() {
+
+    // Don't reset if the frame is not made.
+    if (frame != null) {
+
+      this.setupGame();
+      this.updateNumberOfFlagged(0, gameModel.getDifficulty().getNumberOfMines());
+
+      gamePanel.repaint();
+
+    }
 
   }
 
@@ -153,8 +202,20 @@ public class GameView {
 
   }
 
+  public void showGamePanel() {
+    cardLayout.show(basePanel, GAME);
+
+    frame.pack();
+
+  }
+
   public void updateTile(Tile tile) {
     tileViews[tile.getY()][tile.getX()].repaint();
+  }
+
+  public void updateNumberOfFlagged(int numberOfFlagged, int numberOfMines) {
+    flaggedLabel.setText(String.format("Flagged: %s/%s", numberOfFlagged, numberOfMines));
+    flaggedLabel.repaint();
   }
 
   public void stop() {

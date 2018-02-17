@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import com.minesweeper.controller.GameController;
+import com.minesweeper.model.GameModel;
 import com.minesweeper.model.Tile;
 import com.minesweeper.utils.Difficulty;
 import com.minesweeper.view.GameView;
@@ -20,6 +20,7 @@ public class UIController {
 
   private GameController gameController;
   private GameView gameView;
+  private GameModel gameModel;
 
   /**
    * @param gameController
@@ -29,13 +30,15 @@ public class UIController {
     super();
     this.gameController = gameController;
     this.gameView = gameView;
+    this.gameModel = gameController.getModel();
   }
 
   public void addEasyButton(JButton easyButton) {
 
     easyButton.addActionListener((e) -> {
       gameController.initializeGame(Difficulty.EASY);
-      gameView.createGamePanel(gameController.getModel());
+      gameView.setupGame();
+      gameView.showGamePanel();
     });
 
   }
@@ -44,7 +47,8 @@ public class UIController {
 
     mediumButton.addActionListener((e) -> {
       gameController.initializeGame(Difficulty.MEDIUM);
-      gameView.createGamePanel(gameController.getModel());
+      gameView.setupGame();
+      gameView.showGamePanel();
     });
 
   }
@@ -53,7 +57,8 @@ public class UIController {
 
     hardButton.addActionListener((e) -> {
       gameController.initializeGame(Difficulty.HARD);
-      gameView.createGamePanel(gameController.getModel());
+      gameView.setupGame();
+      gameView.showGamePanel();
     });
 
   }
@@ -61,8 +66,26 @@ public class UIController {
   public void addQuitButton(JButton quitButton) {
 
     quitButton.addActionListener((e) -> {
-      gameController.stopGame();
+      gameController.terminate();
       gameView.stop();
+    });
+
+  }
+
+  public void addResetButton(JButton resetButton) {
+
+    resetButton.addActionListener((e) -> {
+      gameController.reset();
+      gameView.reset();
+    });
+
+  }
+
+  public void addChangeDifficultyButton(JButton changeDifficultyButton) {
+
+    changeDifficultyButton.addActionListener((e) -> {
+      gameController.stopGame();
+      gameView.showMenuPanel();
     });
 
   }
@@ -100,6 +123,9 @@ public class UIController {
 
           gameController.toggleTileFlagged(tile.getTile());
           gameView.updateTile(tile.getTile());
+
+          gameView.updateNumberOfFlagged(gameController.getFlaggedTiles(),
+              gameModel.getDifficulty().getNumberOfMines());
 
           tile.repaint();
 

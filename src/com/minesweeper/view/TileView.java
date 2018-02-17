@@ -14,8 +14,8 @@ import com.minesweeper.model.TileContent;
  */
 public class TileView extends JPanel {
 
-  private static final int DEFAULT_WIDTH = 20;
-  private static final int DEFAULT_HEIGHT = 20;
+  private static final int DEFAULT_WIDTH = 21;
+  private static final int DEFAULT_HEIGHT = 21;
 
   private static final int ROUNDNESS = 5;
 
@@ -55,6 +55,15 @@ public class TileView extends JPanel {
         this.paintOpened(g);
 
         break;
+      case FLAGGED_UNSURE:
+        this.paintCovered(g);
+
+        g.setColor(Color.ORANGE);
+        g.fillOval(this.getWidth() / 4, this.getHeight() / 4, this.getWidth() / 2,
+            this.getHeight() / 2);
+
+        break;
+
     }
 
   }

@@ -15,7 +15,7 @@ import com.minesweeper.utils.Difficulty;
  */
 public class GameController {
 
-  private GameModel model;
+  private GameModel model = new GameModel();
 
   private Random random;
 
@@ -24,8 +24,6 @@ public class GameController {
   private boolean firstTile;
 
   public void initializeGame(Difficulty difficulty) {
-
-    model = new GameModel();
 
     model.setDifficulty(difficulty);
     model.setBoard(GameController.generateEmptyBoard(difficulty));
@@ -38,11 +36,24 @@ public class GameController {
 
   }
 
+  public void reset() {
+
+    // Don't reset if the game has not started.
+    if (model != null) {
+      this.initializeGame(model.getDifficulty());
+    }
+
+  }
+
   public void stopGame() {
 
-    model = null;
-
     random = null;
+
+  }
+
+  public void terminate() {
+
+    model = null;
 
   }
 
@@ -50,6 +61,7 @@ public class GameController {
 
     switch (tile.getState()) {
       case COVERED:
+      case FLAGGED_UNSURE:
 
         tile.setState(TileState.OPENED);
 
@@ -148,7 +160,9 @@ public class GameController {
             continue;
           }
 
-          if (tileToCheck.getState() != TileState.COVERED) {
+          // Only uncover COVERED and FLAGGED_UNSURE tiles.
+          if (!(tileToCheck.getState() == TileState.COVERED
+              || tileToCheck.getState() == TileState.FLAGGED_UNSURE)) {
             continue;
           }
 
@@ -189,9 +203,11 @@ public class GameController {
         flaggedTiles++;
         break;
       case FLAGGED:
-        tile.setState(TileState.COVERED);
+        tile.setState(TileState.FLAGGED_UNSURE);
         flaggedTiles--;
         break;
+      case FLAGGED_UNSURE:
+        tile.setState(TileState.COVERED);
       case OPENED:
         break;
     }

@@ -7,6 +7,6 @@ package com.minesweeper.model;
  */
 public enum TileState {
 
-  COVERED, OPENED, FLAGGED;
+  COVERED, OPENED, FLAGGED, FLAGGED_UNSURE;
 
 }

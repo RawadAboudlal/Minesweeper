@@ -231,12 +231,11 @@ public class GameController {
     for (int numberOfMinesGenerated = 0; numberOfMinesGenerated < difficulty.getNumberOfMines();) {
 
       int x = random.nextInt(difficulty.getWidth());
-      int y = random.nextInt(difficulty.getWidth());
+      int y = random.nextInt(difficulty.getHeight());
 
       Tile tile = board[y][x];
 
-      if (tile.getState() == TileState.COVERED && tile.getContent() == TileContent.NONE
-          && tile.getContent() != TileContent.MINE) {
+      if (tile.getState() == TileState.COVERED && tile.getContent() != TileContent.MINE) {
 
         tile.setContent(TileContent.MINE);
 

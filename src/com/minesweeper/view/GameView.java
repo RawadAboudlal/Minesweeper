@@ -1,6 +1,7 @@
 package com.minesweeper.view;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
@@ -8,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import com.minesweeper.controller.GameController;
 import com.minesweeper.controller.UIController;
@@ -39,6 +41,8 @@ public class GameView {
 
   private JPanel boardPanel;
   private JLabel flaggedLabel;
+
+  private JButton resetButton;
 
   private CardLayout cardLayout;
   private GridLayout boardLayout;
@@ -133,7 +137,7 @@ public class GameView {
 
     userFeedbackPanel.add(flaggedLabel);
 
-    JButton resetButton = new JButton("Reset");
+    resetButton = new JButton("Reset");
     JButton changeDifficultyButton = new JButton("Change Difficulty");
 
     uiController.addResetButton(resetButton);
@@ -206,6 +210,32 @@ public class GameView {
     cardLayout.show(basePanel, GAME);
 
     frame.pack();
+
+  }
+
+  public void showLoss(Tile lostTile) {
+
+    tileViews[lostTile.getX()][lostTile.getY()].setLost();
+
+    this.disableAllTiles();
+
+    // TODO: Show all mine locations.
+
+  }
+
+  public void showWin() {
+
+    this.disableAllTiles();
+
+    JOptionPane.showMessageDialog(frame, String.format("Congratulations!"));
+
+  }
+
+  private void disableAllTiles() {
+
+    for (Component tileView : boardPanel.getComponents()) {
+      tileView.setEnabled(false);
+    }
 
   }
 

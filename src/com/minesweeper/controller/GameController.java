@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Random;
 import com.minesweeper.model.GameModel;
+import com.minesweeper.model.GameState;
 import com.minesweeper.model.Tile;
 import com.minesweeper.model.TileContent;
 import com.minesweeper.model.TileState;
@@ -19,20 +20,23 @@ public class GameController {
 
   private Random random;
 
-  private int flaggedTiles;
+  private Tile lastRevealedTile;
 
-  private boolean firstTile;
+  private int revealedTiles;
+  private int flaggedTiles;
 
   public void initializeGame(Difficulty difficulty) {
 
     model.setDifficulty(difficulty);
     model.setBoard(GameController.generateEmptyBoard(difficulty));
+    model.setGameState(GameState.INITIAL);
 
     random = new Random();
 
-    flaggedTiles = 0;
+    lastRevealedTile = null;
 
-    firstTile = true;
+    revealedTiles = 0;
+    flaggedTiles = 0;
 
   }
 
@@ -65,13 +69,13 @@ public class GameController {
 
         tile.setState(TileState.OPENED);
 
-        if (firstTile) {
+        if (model.getGameState() == GameState.INITIAL) {
+
+          model.setGameState(GameState.PLAYING);
 
           tile.setContent(TileContent.NONE);
 
           this.generateBoard();
-
-          firstTile = false;
 
         }
 
@@ -88,14 +92,40 @@ public class GameController {
 
   private Tile[] tileRevealed(Tile tile) {
 
+    Tile[] revealedTiles = new Tile[] {tile};
+
+    lastRevealedTile = tile;
+
     if (tile.getContent() == TileContent.MINE) {
-      // game over
+
+      model.setGameState(GameState.LOSS);
+
     } else if (tile.getContent() == TileContent.NONE) {
-      return this.reavealNeighboringTiles(tile);
+      revealedTiles = this.reavealNeighboringTiles(tile);
     }
 
-    return new Tile[] {tile};
+    if (tile.getContent() != TileContent.MINE) {
+      this.revealedTiles++;
+    }
 
+    if (this.checkGameWon()) {
+      model.setGameState(GameState.WIN);
+    }
+
+    return revealedTiles;
+
+  }
+
+  private boolean checkGameWon() {
+    return revealedTiles >= (model.getDifficulty().getWidth() * model.getDifficulty().getHeight())
+        - model.getDifficulty().getNumberOfMines();
+  }
+
+  /**
+   * @return the lastRevealedTile
+   */
+  public Tile getLastRevealedTile() {
+    return lastRevealedTile;
   }
 
   /**
@@ -184,6 +214,8 @@ public class GameController {
 
           }
 
+          revealedTiles++;
+
           checkedTiles.add(tileToCheck);
 
         }
@@ -214,7 +246,7 @@ public class GameController {
 
   }
 
-  public static Tile[][] generateEmptyBoard(Difficulty difficulty) {
+  private static Tile[][] generateEmptyBoard(Difficulty difficulty) {
 
     Tile[][] board = new Tile[difficulty.getHeight()][difficulty.getWidth()];
 

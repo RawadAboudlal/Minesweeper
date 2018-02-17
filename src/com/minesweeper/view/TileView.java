@@ -26,6 +26,8 @@ public class TileView extends JPanel {
 
   private final Tile tile;
 
+  private boolean lost = false;
+
   public TileView(Tile tile) {
     super();
     this.tile = tile;
@@ -39,6 +41,13 @@ public class TileView extends JPanel {
    */
   @Override
   protected void paintComponent(Graphics g) {
+
+    if (lost) {
+
+      g.setColor(Color.RED);
+      g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ROUNDNESS, ROUNDNESS);
+
+    }
 
     switch (tile.getState()) {
       case COVERED:
@@ -95,6 +104,10 @@ public class TileView extends JPanel {
     g.drawString(s, (this.getWidth() / 2) + (fm.stringWidth(s) / 2),
         (this.getHeight() / 2) + (fm.getHeight() / 2));
 
+  }
+
+  public void setLost() {
+    this.lost = true;
   }
 
   /**

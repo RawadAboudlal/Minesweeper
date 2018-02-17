@@ -7,6 +7,7 @@ import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import com.minesweeper.model.GameModel;
+import com.minesweeper.model.GameState;
 import com.minesweeper.model.Tile;
 import com.minesweeper.utils.Difficulty;
 import com.minesweeper.view.GameView;
@@ -111,12 +112,22 @@ public class UIController {
 
         TileView tile = (TileView) e.getSource();
 
+        if (!tile.isEnabled()) {
+          return;
+        }
+
         if (e.getButton() == MouseEvent.BUTTON1) {
 
           Tile[] tilesToUpdate = gameController.revealTile(tile.getTile());
 
           for (Tile tileToUpdate : tilesToUpdate) {
             gameView.updateTile(tileToUpdate);
+          }
+
+          if (gameModel.getGameState() == GameState.WIN) {
+            gameView.showWin();
+          } else if (gameModel.getGameState() == GameState.LOSS) {
+            gameView.showLoss(gameController.getLastRevealedTile());
           }
 
         } else if (e.getButton() == MouseEvent.BUTTON3) {

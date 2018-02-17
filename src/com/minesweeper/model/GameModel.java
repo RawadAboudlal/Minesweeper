@@ -12,6 +12,8 @@ public class GameModel {
 
   private Difficulty difficulty;
 
+  private GameState gameState;
+
   /**
    * @return the board
    */
@@ -38,6 +40,20 @@ public class GameModel {
    */
   public void setDifficulty(Difficulty difficulty) {
     this.difficulty = difficulty;
+  }
+
+  /**
+   * @return the gameState
+   */
+  public GameState getGameState() {
+    return gameState;
+  }
+
+  /**
+   * @param gameState the gameState to set
+   */
+  public void setGameState(GameState gameState) {
+    this.gameState = gameState;
   }
 
 }

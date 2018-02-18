@@ -110,9 +110,10 @@ public class GameView {
 
     uiController.addFrame(frame);
 
+    frame.setLocationByPlatform(true);
+    
     this.showMenuPanel();
 
-    frame.setLocationByPlatform(true);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.setVisible(true);
 
@@ -240,6 +241,28 @@ public class GameView {
     resetButton.repaint();
 
     this.disableAllTiles();
+    this.revealRemainingMines();
+
+  }
+
+  public void showWin() {
+
+    this.disableAllTiles();
+    this.revealRemainingMines();
+
+    JOptionPane.showMessageDialog(frame, String.format("Congratulations!"));
+
+  }
+
+  private void disableAllTiles() {
+
+    for (Component tileView : boardPanel.getComponents()) {
+      tileView.setEnabled(false);
+    }
+
+  }
+
+  private void revealRemainingMines() {
 
     // Shows all the remaining mines.
     for (int y = 0; y < gameModel.getDifficulty().getHeight(); y++) {
@@ -255,22 +278,6 @@ public class GameView {
         }
 
       }
-    }
-
-  }
-
-  public void showWin() {
-
-    this.disableAllTiles();
-
-    JOptionPane.showMessageDialog(frame, String.format("Congratulations!"));
-
-  }
-
-  private void disableAllTiles() {
-
-    for (Component tileView : boardPanel.getComponents()) {
-      tileView.setEnabled(false);
     }
 
   }

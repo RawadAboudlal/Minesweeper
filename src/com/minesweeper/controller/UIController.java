@@ -118,6 +118,10 @@ public class UIController {
 
         if (e.getButton() == MouseEvent.BUTTON1) {
 
+          if (gameModel.getGameState() == GameState.INITIAL) {
+            gameView.postInitialGameState();
+          }
+
           Tile[] tilesToUpdate = gameController.revealTile(tile.getTile());
 
           for (Tile tileToUpdate : tilesToUpdate) {

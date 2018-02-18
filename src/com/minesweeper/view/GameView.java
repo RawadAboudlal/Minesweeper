@@ -2,6 +2,7 @@ package com.minesweeper.view;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import javax.swing.BoxLayout;
@@ -27,6 +28,9 @@ public class GameView {
 
   private static final String MENU = "menu";
   private static final String GAME = "game";
+
+  private static final int DEFAULT_WIDTH = 640;
+  private static final int DEFAULT_HEIGHT = 480;
 
   private static final int TILE_GAP = 3;
 
@@ -106,7 +110,8 @@ public class GameView {
 
     uiController.addFrame(frame);
 
-    frame.pack();
+    this.showMenuPanel();
+
     frame.setLocationByPlatform(true);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.setVisible(true);
@@ -179,6 +184,7 @@ public class GameView {
     boardPanel.repaint();
 
     resetButton.setText("Start Over");
+    resetButton.setEnabled(false);
     resetButton.repaint();
 
     this.updateNumberOfFlagged(uiController.getGameController().getFlaggedTiles(),
@@ -200,6 +206,9 @@ public class GameView {
   }
 
   public void showMenuPanel() {
+
+    menuPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+
     cardLayout.show(basePanel, MENU);
 
     frame.pack();
@@ -207,9 +216,19 @@ public class GameView {
   }
 
   public void showGamePanel() {
+
+    menuPanel.setPreferredSize(null);
+
     cardLayout.show(basePanel, GAME);
 
     frame.pack();
+
+  }
+
+  public void postInitialGameState() {
+
+    resetButton.setEnabled(true);
+    resetButton.repaint();
 
   }
 

@@ -17,6 +17,7 @@ import com.minesweeper.model.GameModel;
 import com.minesweeper.model.Tile;
 import com.minesweeper.model.TileContent;
 import com.minesweeper.model.TileState;
+import com.minesweeper.view.textures.Textures;
 
 /**
  * @author Rawad
@@ -31,8 +32,6 @@ public class GameView {
 
   private static final int DEFAULT_WIDTH = 640;
   private static final int DEFAULT_HEIGHT = 480;
-
-  private static final int TILE_GAP = 3;
 
   private JFrame frame;
 
@@ -65,6 +64,8 @@ public class GameView {
     uiController = new UIController(gameController, this);
 
     this.gameModel = gameController.getModel();
+
+    Textures.loadTextures();
 
     EventQueue.invokeLater(() -> {
       GameView.this.initGui();
@@ -122,7 +123,7 @@ public class GameView {
   private void createGamePanel() {
 
     boardPanel = new JPanel();
-    boardLayout = new GridLayout(1, 1, TILE_GAP, TILE_GAP);
+    boardLayout = new GridLayout(1, 1);
 
     boardPanel.setLayout(boardLayout);
 
@@ -236,7 +237,8 @@ public class GameView {
 
   public void showLoss(Tile lostTile) {
 
-    tileViews[lostTile.getY()][lostTile.getX()].setLost();
+    tileViews[lostTile.getY()][lostTile.getX()].setTriggered();
+    this.updateTile(lostTile);
 
     resetButton.setText("Play Again");
     resetButton.repaint();
@@ -275,7 +277,7 @@ public class GameView {
 
         if (tile.getContent() == TileContent.MINE && tile.getState() != TileState.FLAGGED) {
           tile.setState(TileState.OPENED);
-          tileView.repaint();
+          tileView.update();
         }
 
       }
@@ -284,7 +286,7 @@ public class GameView {
   }
 
   public void updateTile(Tile tile) {
-    tileViews[tile.getY()][tile.getX()].repaint();
+    tileViews[tile.getY()][tile.getX()].update();
   }
 
   public void updateNumberOfFlagged(int numberOfFlagged, int numberOfMines) {

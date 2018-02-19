@@ -111,7 +111,7 @@ public class GameView {
     uiController.addFrame(frame);
 
     frame.setLocationByPlatform(true);
-    
+
     this.showMenuPanel();
 
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -208,6 +208,7 @@ public class GameView {
 
   public void showMenuPanel() {
 
+    gamePanel.setPreferredSize(null);
     menuPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
     cardLayout.show(basePanel, MENU);

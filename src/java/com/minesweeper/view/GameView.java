@@ -1,6 +1,5 @@
 package com.minesweeper.view;
 
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -45,7 +44,7 @@ public class GameView {
 
   private JButton resetButton;
 
-  private CardLayout cardLayout;
+  private CustomCardLayout cardLayout;
   private GridLayout boardLayout;
 
   private UIController uiController;
@@ -75,9 +74,6 @@ public class GameView {
 
   private void initGui() {
 
-    frame = new JFrame(GAME_NAME);
-
-    basePanel = new JPanel();
     menuPanel = new JPanel();
     gamePanel = new JPanel();
 
@@ -98,14 +94,18 @@ public class GameView {
     menuPanel.add(hardDifficultyButton);
     menuPanel.add(quitButton);
 
+    menuPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+
     this.createGamePanel();
 
-    cardLayout = new CardLayout();
+    cardLayout = new CustomCardLayout();
 
-    basePanel.setLayout(cardLayout);
+    basePanel = new JPanel(cardLayout);
 
     basePanel.add(menuPanel, MENU);
     basePanel.add(gamePanel, GAME);
+
+    frame = new JFrame(GAME_NAME);
 
     frame.setContentPane(basePanel);
 
@@ -209,9 +209,6 @@ public class GameView {
 
   public void showMenuPanel() {
 
-    gamePanel.setPreferredSize(null);
-    menuPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
-
     cardLayout.show(basePanel, MENU);
 
     frame.pack();
@@ -219,8 +216,6 @@ public class GameView {
   }
 
   public void showGamePanel() {
-
-    menuPanel.setPreferredSize(null);
 
     cardLayout.show(basePanel, GAME);
 

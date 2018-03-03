@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -211,13 +212,26 @@ public class GameView {
 
     cardLayout.show(basePanel, MENU);
 
-    frame.pack();
+    resetMinimumSize();
 
   }
 
   public void showGamePanel() {
 
     cardLayout.show(basePanel, GAME);
+
+    resetMinimumSize();
+
+  }
+
+  private void resetMinimumSize() {
+
+    Insets insets = frame.getInsets();
+
+    Dimension currentCompSize = cardLayout.findCurrentComponent(basePanel).getPreferredSize();
+
+    frame.setMinimumSize(new Dimension(currentCompSize.width + insets.left + insets.right,
+        currentCompSize.height + insets.top + insets.bottom));
 
     frame.pack();
 

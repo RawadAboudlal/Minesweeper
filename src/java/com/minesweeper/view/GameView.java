@@ -3,6 +3,8 @@ package com.minesweeper.view;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import javax.swing.BoxLayout;
@@ -76,9 +78,10 @@ public class GameView {
   private void initGui() {
 
     menuPanel = new JPanel();
-    gamePanel = new JPanel();
 
-    menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+    GridBagLayout menuLayout = new GridBagLayout();
+
+    menuPanel.setLayout(menuLayout);
 
     JButton easyDifficultyButton = new JButton("Easy");
     JButton mediumDifficultyButton = new JButton("Medium");
@@ -90,13 +93,39 @@ public class GameView {
     uiController.addHardButton(hardDifficultyButton);
     uiController.addQuitButton(quitButton);
 
-    menuPanel.add(easyDifficultyButton);
-    menuPanel.add(mediumDifficultyButton);
-    menuPanel.add(hardDifficultyButton);
-    menuPanel.add(quitButton);
+    GridBagConstraints constraints = new GridBagConstraints();
+
+    constraints.gridx = 1;
+    constraints.gridy = 1;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(easyDifficultyButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 2;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(mediumDifficultyButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 3;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(hardDifficultyButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 4;
+    constraints.insets = new Insets(0, 0, 0, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(quitButton, constraints);
 
     menuPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
+    gamePanel = new JPanel();
     this.createGamePanel();
 
     cardLayout = new CustomCardLayout();

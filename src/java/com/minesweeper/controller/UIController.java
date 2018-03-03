@@ -102,10 +102,24 @@ public class UIController {
       public void mousePressed(MouseEvent e) {}
 
       @Override
-      public void mouseExited(MouseEvent e) {}
+      public void mouseExited(MouseEvent e) {
+
+        TileView tile = (TileView) e.getSource();
+
+        tile.setHovered(false);
+        tile.repaint();
+
+      }
 
       @Override
-      public void mouseEntered(MouseEvent e) {}
+      public void mouseEntered(MouseEvent e) {
+
+        TileView tile = (TileView) e.getSource();
+
+        tile.setHovered(true);
+        tile.repaint();
+
+      }
 
       @Override
       public void mouseClicked(MouseEvent e) {

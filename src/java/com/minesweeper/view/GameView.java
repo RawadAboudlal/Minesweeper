@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -142,7 +143,9 @@ public class GameView {
 
     customGamePanel = new JPanel();
 
-    customGamePanel.setLayout(new GridBagLayout());
+    GroupLayout customGamePanelLayout = new GroupLayout(customGamePanel);
+
+    customGamePanel.setLayout(customGamePanelLayout);
 
     JLabel widthLabel = new JLabel("Width");
     JLabel heightLabel = new JLabel("Height");
@@ -163,24 +166,43 @@ public class GameView {
         numberOfMinesSelector);
     uiController.addMainMenuButton(mainMenuButton);
 
-    constraints = new GridBagConstraints();
+    customGamePanelLayout.setVerticalGroup(
+        customGamePanelLayout.createSequentialGroup().addGroup(customGamePanelLayout
+            .createSequentialGroup().addComponent(widthLabel).addComponent(widthSelector))
+            .addGroup(customGamePanelLayout.createSequentialGroup().addComponent(heightLabel)
+                .addComponent(heightSelector))
+            .addGroup(customGamePanelLayout.createSequentialGroup().addComponent(numberOfMinesLabel)
+                .addComponent(numberOfMinesSelector))
+            .addGroup(customGamePanelLayout.createParallelGroup()
+                .addComponent(playCustomGameButton).addComponent(mainMenuButton)));
 
-    customGamePanel.add(widthLabel, constraints);
+    customGamePanelLayout
+        .setHorizontalGroup(customGamePanelLayout.createParallelGroup().addComponent(widthLabel)
+            .addComponent(widthSelector).addComponent(heightLabel).addComponent(heightSelector)
+            .addComponent(numberOfMinesLabel).addComponent(numberOfMinesSelector)
+            .addGroup(customGamePanelLayout.createSequentialGroup()
+                .addComponent(playCustomGameButton)
+                .addComponent(mainMenuButton)));
 
-    customGamePanel.add(heightLabel, constraints);
-
-    customGamePanel.add(numberOfMinesLabel, constraints);
-
-    customGamePanel.add(widthSelector, constraints);
-
-    customGamePanel.add(heightSelector, constraints);
-
-    customGamePanel.add(numberOfMinesSelector, constraints);
-
-    customGamePanel.add(playCustomGameButton, constraints);
-
-    customGamePanel.add(mainMenuButton, constraints);
-
+    /*
+     * / constraints = new GridBagConstraints();
+     * 
+     * customGamePanel.add(widthLabel, constraints);
+     * 
+     * customGamePanel.add(heightLabel, constraints);
+     * 
+     * customGamePanel.add(numberOfMinesLabel, constraints);
+     * 
+     * customGamePanel.add(widthSelector, constraints);
+     * 
+     * customGamePanel.add(heightSelector, constraints);
+     * 
+     * customGamePanel.add(numberOfMinesSelector, constraints);
+     * 
+     * customGamePanel.add(playCustomGameButton, constraints);
+     * 
+     * customGamePanel.add(mainMenuButton, constraints); /
+     **/
     cardLayout = new CustomCardLayout();
 
     basePanel = new JPanel(cardLayout);

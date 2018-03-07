@@ -4,8 +4,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import javax.swing.AbstractSpinnerModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.SpinnerNumberModel;
 import com.minesweeper.model.GameModel;
 import com.minesweeper.model.GameState;
 import com.minesweeper.model.Tile;
@@ -18,6 +20,20 @@ import com.minesweeper.view.TileView;
  *
  */
 public class UIController {
+
+  private static final int MAX_WIDTH = 100;
+  private static final int MAX_HEIGHT = 100;
+
+  private static final int MIN_WIDTH = 2;
+  private static final int MIN_HEIGHT = 2;
+
+  private static final int DEFAULT_WIDTH = Difficulty.EASY.getWidth();
+  private static final int DEFAULT_HEIGHT = Difficulty.EASY.getHeight();
+
+  private static final int DEFAULT_NUMBER_OF_MINES = Difficulty.EASY.getNumberOfMines();
+
+  private static final int MAX_NUMBER_OF_MINES = (MAX_WIDTH - 1) * (MAX_HEIGHT * 1);
+  private static final int MIN_NUMBER_OF_MINES = 2;
 
   private GameController gameController;
   private GameView gameView;
@@ -225,6 +241,23 @@ public class UIController {
    */
   public GameController getGameController() {
     return gameController;
+  }
+  
+  public static final AbstractSpinnerModel getWidthSpinnerEditor() {
+    return new SpinnerNumberModel(DEFAULT_WIDTH, MIN_WIDTH, MAX_WIDTH, 1);
+  }
+
+  public static final AbstractSpinnerModel getHeightSpinnerEditor() {
+    return new SpinnerNumberModel(DEFAULT_HEIGHT, MIN_HEIGHT, MAX_HEIGHT, 1);
+  }
+
+  public static final AbstractSpinnerModel getNumberOfMinesSpinnerEditor() {
+    return new SpinnerNumberModel(DEFAULT_NUMBER_OF_MINES, MIN_NUMBER_OF_MINES, MAX_NUMBER_OF_MINES,
+        1);
+  }
+
+  public static final int getMaxNumberOfMines(int width, int height) {
+    return (width - 1) * (height - 1);
   }
 
 }

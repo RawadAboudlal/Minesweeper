@@ -152,9 +152,9 @@ public class GameView {
     JSpinner heightSelector = new JSpinner();
     JSpinner numberOfMinesSelector = new JSpinner();
 
-    widthSelector.setEditor(new JSpinner.NumberEditor(widthSelector));
-    heightSelector.setEditor(new JSpinner.NumberEditor(heightSelector));
-    numberOfMinesSelector.setEditor(new JSpinner.NumberEditor(numberOfMinesSelector));
+    widthSelector.setModel(UIController.getWidthSpinnerEditor());
+    heightSelector.setModel(UIController.getHeightSpinnerEditor());
+    numberOfMinesSelector.setModel(UIController.getNumberOfMinesSpinnerEditor());
 
     JButton playCustomGameButton = new JButton("Play");
     JButton mainMenuButton = new JButton("Main Menu");

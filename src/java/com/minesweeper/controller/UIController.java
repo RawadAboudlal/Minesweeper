@@ -64,11 +64,28 @@ public class UIController {
 
   }
 
+  public void addCustomGameButton(JButton customGameButton) {
+
+    customGameButton.addActionListener((e) -> {
+      gameView.showCustomGamePanel();
+    });
+
+  }
+
+
   public void addQuitButton(JButton quitButton) {
 
     quitButton.addActionListener((e) -> {
       gameController.terminate();
       gameView.stop();
+    });
+
+  }
+
+  public void addMainMenuButton(JButton menuButton) {
+
+    menuButton.addActionListener((e) -> {
+      gameView.showMenuPanel();
     });
 
   }

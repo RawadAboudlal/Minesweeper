@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import com.minesweeper.controller.GameController;
 import com.minesweeper.controller.UIController;
 import com.minesweeper.model.GameModel;
@@ -31,6 +32,7 @@ public class GameView {
 
   private static final String MENU = "menu";
   private static final String GAME = "game";
+  private static final String CUSTOM_GAME = "custom";
 
   private static final int DEFAULT_WIDTH = 640;
   private static final int DEFAULT_HEIGHT = 480;
@@ -41,6 +43,7 @@ public class GameView {
 
   private JPanel menuPanel;
   private JPanel gamePanel;
+  private JPanel customGamePanel;
 
   private JPanel boardPanel;
   private JLabel flaggedLabel;
@@ -86,11 +89,13 @@ public class GameView {
     JButton easyDifficultyButton = new JButton("Easy");
     JButton mediumDifficultyButton = new JButton("Medium");
     JButton hardDifficultyButton = new JButton("Hard");
+    JButton customGameButton = new JButton("Custom...");
     JButton quitButton = new JButton("Quit");
 
     uiController.addEasyButton(easyDifficultyButton);
     uiController.addMediumButton(mediumDifficultyButton);
     uiController.addHardButton(hardDifficultyButton);
+    uiController.addCustomGameButton(customGameButton);
     uiController.addQuitButton(quitButton);
 
     GridBagConstraints constraints = new GridBagConstraints();
@@ -118,6 +123,13 @@ public class GameView {
 
     constraints.gridx = 1;
     constraints.gridy = 4;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(customGameButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 5;
     constraints.insets = new Insets(0, 0, 0, 0);
     constraints.fill = GridBagConstraints.HORIZONTAL;
 
@@ -128,12 +140,52 @@ public class GameView {
     gamePanel = new JPanel();
     this.createGamePanel();
 
+    customGamePanel = new JPanel();
+
+    customGamePanel.setLayout(new GridBagLayout());
+
+    JLabel widthLabel = new JLabel("Width");
+    JLabel heightLabel = new JLabel("Height");
+    JLabel numberOfMinesLabel = new JLabel("Number of Mines");
+
+    JSpinner widthSelector = new JSpinner();
+    JSpinner heightSelector = new JSpinner();
+    JSpinner numberOfMinesSelector = new JSpinner();
+
+    widthSelector.setEditor(new JSpinner.NumberEditor(widthSelector));
+    heightSelector.setEditor(new JSpinner.NumberEditor(heightSelector));
+    numberOfMinesSelector.setEditor(new JSpinner.NumberEditor(numberOfMinesSelector));
+
+    JButton playCustomGameButton = new JButton("Play");
+    JButton mainMenuButton = new JButton("Main Menu");
+
+    uiController.addMainMenuButton(mainMenuButton);
+
+    constraints = new GridBagConstraints();
+
+    customGamePanel.add(widthLabel, constraints);
+
+    customGamePanel.add(heightLabel, constraints);
+
+    customGamePanel.add(numberOfMinesLabel, constraints);
+
+    customGamePanel.add(widthSelector, constraints);
+
+    customGamePanel.add(heightSelector, constraints);
+
+    customGamePanel.add(numberOfMinesSelector, constraints);
+
+    customGamePanel.add(playCustomGameButton, constraints);
+
+    customGamePanel.add(mainMenuButton, constraints);
+
     cardLayout = new CustomCardLayout();
 
     basePanel = new JPanel(cardLayout);
 
     basePanel.add(menuPanel, MENU);
     basePanel.add(gamePanel, GAME);
+    basePanel.add(customGamePanel, CUSTOM_GAME);
 
     frame = new JFrame(GAME_NAME);
 
@@ -248,6 +300,14 @@ public class GameView {
   public void showGamePanel() {
 
     cardLayout.show(basePanel, GAME);
+
+    resetMinimumSize();
+
+  }
+
+  public void showCustomGamePanel() {
+
+    cardLayout.show(basePanel, CUSTOM_GAME);
 
     resetMinimumSize();
 

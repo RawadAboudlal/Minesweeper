@@ -7,6 +7,7 @@ import java.awt.event.WindowListener;
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import com.minesweeper.model.GameModel;
 import com.minesweeper.model.GameState;
@@ -22,22 +23,26 @@ import com.minesweeper.view.TileView;
 public class UIController {
 
   private static final int MAX_WIDTH = 100;
-  private static final int MAX_HEIGHT = 100;
+  private static final int MAX_HEIGHT = 45;
 
   private static final int MIN_WIDTH = 2;
   private static final int MIN_HEIGHT = 2;
+
+  private static final int MAX_NUMBER_OF_MINES = (MAX_WIDTH - 1) * (MAX_HEIGHT - 1);
+  private static final int MIN_NUMBER_OF_MINES = 2;
 
   private static final int DEFAULT_WIDTH = Difficulty.EASY.getWidth();
   private static final int DEFAULT_HEIGHT = Difficulty.EASY.getHeight();
 
   private static final int DEFAULT_NUMBER_OF_MINES = Difficulty.EASY.getNumberOfMines();
 
-  private static final int MAX_NUMBER_OF_MINES = (MAX_WIDTH - 1) * (MAX_HEIGHT * 1);
-  private static final int MIN_NUMBER_OF_MINES = 2;
-
   private GameController gameController;
   private GameView gameView;
   private GameModel gameModel;
+
+  private JSpinner widthSelector;
+  private JSpinner heightSelector;
+  private JSpinner numberOfMinesSelector;
 
   /**
    * @param gameController
@@ -120,6 +125,36 @@ public class UIController {
     changeDifficultyButton.addActionListener((e) -> {
       gameController.stopGame();
       gameView.showMenuPanel();
+    });
+
+  }
+
+  public void addPlayCustomDifficultyButton(JButton playCustomDifficultyButton,
+      JSpinner widthSelector, JSpinner heightSelector, JSpinner numberOfMinesSelector) {
+
+    this.widthSelector = widthSelector;
+    this.heightSelector = heightSelector;
+    this.numberOfMinesSelector = numberOfMinesSelector;
+
+    playCustomDifficultyButton.addActionListener((e) -> {
+
+      int width = (int) UIController.this.widthSelector.getValue();
+      int height = (int) UIController.this.heightSelector.getValue();
+      int numberOfMines = (int) UIController.this.numberOfMinesSelector.getValue();
+
+      int maxNumberOfMines = UIController.getMaxNumberOfMines(width, height);
+
+      if (numberOfMines > maxNumberOfMines) {
+        System.err.println(String.format(
+            "Maximum number of mines exceeded; using the current maximum, %s, instead.",
+            maxNumberOfMines));
+        numberOfMines = maxNumberOfMines;
+      }
+
+      gameController.initializeGame(new Difficulty(width, height, numberOfMines));
+      gameView.setupGame();
+      gameView.showGamePanel();
+
     });
 
   }

@@ -159,6 +159,8 @@ public class GameView {
     JButton playCustomGameButton = new JButton("Play");
     JButton mainMenuButton = new JButton("Main Menu");
 
+    uiController.addPlayCustomDifficultyButton(playCustomGameButton, widthSelector, heightSelector,
+        numberOfMinesSelector);
     uiController.addMainMenuButton(mainMenuButton);
 
     constraints = new GridBagConstraints();

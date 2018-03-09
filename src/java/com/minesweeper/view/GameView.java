@@ -184,25 +184,6 @@ public class GameView {
                 .addComponent(playCustomGameButton)
                 .addComponent(mainMenuButton)));
 
-    /*
-     * / constraints = new GridBagConstraints();
-     * 
-     * customGamePanel.add(widthLabel, constraints);
-     * 
-     * customGamePanel.add(heightLabel, constraints);
-     * 
-     * customGamePanel.add(numberOfMinesLabel, constraints);
-     * 
-     * customGamePanel.add(widthSelector, constraints);
-     * 
-     * customGamePanel.add(heightSelector, constraints);
-     * 
-     * customGamePanel.add(numberOfMinesSelector, constraints);
-     * 
-     * customGamePanel.add(playCustomGameButton, constraints);
-     * 
-     * customGamePanel.add(mainMenuButton, constraints); /
-     **/
     cardLayout = new CustomCardLayout();
 
     basePanel = new JPanel(cardLayout);

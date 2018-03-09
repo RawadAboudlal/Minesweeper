@@ -1,5 +1,7 @@
 package com.minesweeper.controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -57,38 +59,70 @@ public class UIController {
 
   public void addEasyButton(JButton easyButton) {
 
-    easyButton.addActionListener((e) -> {
-      gameController.initializeGame(Difficulty.EASY);
-      gameView.setupGame();
-      gameView.showGamePanel();
+    easyButton.addActionListener(new ActionListener() {
+
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameController.initializeGame(Difficulty.EASY);
+        gameView.setupGame();
+        gameView.showGamePanel();
+      }
+
     });
 
   }
 
   public void addMediumButton(JButton mediumButton) {
 
-    mediumButton.addActionListener((e) -> {
-      gameController.initializeGame(Difficulty.MEDIUM);
-      gameView.setupGame();
-      gameView.showGamePanel();
+    mediumButton.addActionListener(new ActionListener() {
+
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameController.initializeGame(Difficulty.MEDIUM);
+        gameView.setupGame();
+        gameView.showGamePanel();
+      }
+
     });
 
   }
 
   public void addHardButton(JButton hardButton) {
 
-    hardButton.addActionListener((e) -> {
-      gameController.initializeGame(Difficulty.HARD);
-      gameView.setupGame();
-      gameView.showGamePanel();
+    hardButton.addActionListener(new ActionListener() {
+
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameController.initializeGame(Difficulty.HARD);
+        gameView.setupGame();
+        gameView.showGamePanel();
+      }
+
     });
 
   }
 
   public void addCustomGameButton(JButton customGameButton) {
 
-    customGameButton.addActionListener((e) -> {
-      gameView.showCustomGamePanel();
+    customGameButton.addActionListener(new ActionListener() {
+
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameView.showCustomGamePanel();
+      }
+
     });
 
   }
@@ -96,35 +130,65 @@ public class UIController {
 
   public void addQuitButton(JButton quitButton) {
 
-    quitButton.addActionListener((e) -> {
-      gameController.terminate();
-      gameView.stop();
+    quitButton.addActionListener(new ActionListener() {
+
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameController.terminate();
+        gameView.stop();
+      }
+
     });
 
   }
 
   public void addMainMenuButton(JButton menuButton) {
 
-    menuButton.addActionListener((e) -> {
-      gameView.showMenuPanel();
+    menuButton.addActionListener(new ActionListener() {
+
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameView.showMenuPanel();
+      }
+
     });
 
   }
 
   public void addResetButton(JButton resetButton) {
 
-    resetButton.addActionListener((e) -> {
-      gameController.reset();
-      gameView.reset();
+    resetButton.addActionListener(new ActionListener() {
+      
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameController.reset();
+        gameView.reset();
+      }
+      
     });
 
   }
 
   public void addChangeDifficultyButton(JButton changeDifficultyButton) {
 
-    changeDifficultyButton.addActionListener((e) -> {
-      gameController.stopGame();
-      gameView.showMenuPanel();
+    changeDifficultyButton.addActionListener(new ActionListener() {
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        gameController.stopGame();
+        gameView.showMenuPanel();
+      }
     });
 
   }
@@ -136,24 +200,32 @@ public class UIController {
     this.heightSelector = heightSelector;
     this.numberOfMinesSelector = numberOfMinesSelector;
 
-    playCustomDifficultyButton.addActionListener((e) -> {
+    playCustomDifficultyButton.addActionListener(new ActionListener() {
+      
+      /**
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
 
-      int width = (int) UIController.this.widthSelector.getValue();
-      int height = (int) UIController.this.heightSelector.getValue();
-      int numberOfMines = (int) UIController.this.numberOfMinesSelector.getValue();
+        int width = (int) UIController.this.widthSelector.getValue();
+        int height = (int) UIController.this.heightSelector.getValue();
+        int numberOfMines = (int) UIController.this.numberOfMinesSelector.getValue();
+        
+        int maxNumberOfMines = UIController.getMaxNumberOfMines(width, height);
+        
+        if (numberOfMines > maxNumberOfMines) {
+          System.err.println(String.format(
+              "Maximum number of mines exceeded; using the current maximum, %s, instead.",
+              maxNumberOfMines));
+          numberOfMines = maxNumberOfMines;
+        }
+        
+        gameController.initializeGame(new Difficulty(width, height, numberOfMines));
+        gameView.setupGame();
+        gameView.showGamePanel();
 
-      int maxNumberOfMines = UIController.getMaxNumberOfMines(width, height);
-
-      if (numberOfMines > maxNumberOfMines) {
-        System.err.println(String.format(
-            "Maximum number of mines exceeded; using the current maximum, %s, instead.",
-            maxNumberOfMines));
-        numberOfMines = maxNumberOfMines;
       }
-
-      gameController.initializeGame(new Difficulty(width, height, numberOfMines));
-      gameView.setupGame();
-      gameView.showGamePanel();
 
     });
 

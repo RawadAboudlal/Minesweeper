@@ -219,6 +219,8 @@ public class GameView {
 
     frame.setLocationByPlatform(true);
 
+    frame.pack();
+
     this.showMenuPanel();
 
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

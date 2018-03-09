@@ -1,16 +1,20 @@
 package com.minesweeper.view;
 
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import com.minesweeper.controller.GameController;
 import com.minesweeper.controller.UIController;
 import com.minesweeper.model.GameModel;
@@ -29,6 +33,7 @@ public class GameView {
 
   private static final String MENU = "menu";
   private static final String GAME = "game";
+  private static final String CUSTOM_GAME = "custom";
 
   private static final int DEFAULT_WIDTH = 640;
   private static final int DEFAULT_HEIGHT = 480;
@@ -39,13 +44,14 @@ public class GameView {
 
   private JPanel menuPanel;
   private JPanel gamePanel;
+  private JPanel customGamePanel;
 
   private JPanel boardPanel;
   private JLabel flaggedLabel;
 
   private JButton resetButton;
 
-  private CardLayout cardLayout;
+  private CustomCardLayout cardLayout;
   private GridLayout boardLayout;
 
   private UIController uiController;
@@ -75,43 +81,126 @@ public class GameView {
 
   private void initGui() {
 
-    frame = new JFrame(GAME_NAME);
-
-    basePanel = new JPanel();
     menuPanel = new JPanel();
-    gamePanel = new JPanel();
 
-    menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+    GridBagLayout menuLayout = new GridBagLayout();
+
+    menuPanel.setLayout(menuLayout);
 
     JButton easyDifficultyButton = new JButton("Easy");
     JButton mediumDifficultyButton = new JButton("Medium");
     JButton hardDifficultyButton = new JButton("Hard");
+    JButton customGameButton = new JButton("Custom...");
     JButton quitButton = new JButton("Quit");
 
     uiController.addEasyButton(easyDifficultyButton);
     uiController.addMediumButton(mediumDifficultyButton);
     uiController.addHardButton(hardDifficultyButton);
+    uiController.addCustomGameButton(customGameButton);
     uiController.addQuitButton(quitButton);
 
-    menuPanel.add(easyDifficultyButton);
-    menuPanel.add(mediumDifficultyButton);
-    menuPanel.add(hardDifficultyButton);
-    menuPanel.add(quitButton);
+    GridBagConstraints constraints = new GridBagConstraints();
 
+    constraints.gridx = 1;
+    constraints.gridy = 1;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(easyDifficultyButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 2;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(mediumDifficultyButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 3;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(hardDifficultyButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 4;
+    constraints.insets = new Insets(0, 0, 10, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(customGameButton, constraints);
+
+    constraints.gridx = 1;
+    constraints.gridy = 5;
+    constraints.insets = new Insets(0, 0, 0, 0);
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+
+    menuPanel.add(quitButton, constraints);
+
+    menuPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+
+    gamePanel = new JPanel();
     this.createGamePanel();
 
-    cardLayout = new CardLayout();
+    customGamePanel = new JPanel();
 
-    basePanel.setLayout(cardLayout);
+    GroupLayout customGamePanelLayout = new GroupLayout(customGamePanel);
+
+    customGamePanel.setLayout(customGamePanelLayout);
+
+    JLabel widthLabel = new JLabel("Width");
+    JLabel heightLabel = new JLabel("Height");
+    JLabel numberOfMinesLabel = new JLabel("Number of Mines");
+
+    JSpinner widthSelector = new JSpinner();
+    JSpinner heightSelector = new JSpinner();
+    JSpinner numberOfMinesSelector = new JSpinner();
+
+    widthSelector.setModel(UIController.getWidthSpinnerEditor());
+    heightSelector.setModel(UIController.getHeightSpinnerEditor());
+    numberOfMinesSelector.setModel(UIController.getNumberOfMinesSpinnerEditor());
+
+    JButton playCustomGameButton = new JButton("Play");
+    JButton mainMenuButton = new JButton("Main Menu");
+
+    uiController.addPlayCustomDifficultyButton(playCustomGameButton, widthSelector, heightSelector,
+        numberOfMinesSelector);
+    uiController.addMainMenuButton(mainMenuButton);
+
+    customGamePanelLayout.setVerticalGroup(
+        customGamePanelLayout.createSequentialGroup().addGroup(customGamePanelLayout
+            .createSequentialGroup().addComponent(widthLabel).addComponent(widthSelector))
+            .addGroup(customGamePanelLayout.createSequentialGroup().addComponent(heightLabel)
+                .addComponent(heightSelector))
+            .addGroup(customGamePanelLayout.createSequentialGroup().addComponent(numberOfMinesLabel)
+                .addComponent(numberOfMinesSelector))
+            .addGroup(customGamePanelLayout.createParallelGroup()
+                .addComponent(playCustomGameButton).addComponent(mainMenuButton)));
+
+    customGamePanelLayout
+        .setHorizontalGroup(customGamePanelLayout.createParallelGroup().addComponent(widthLabel)
+            .addComponent(widthSelector).addComponent(heightLabel).addComponent(heightSelector)
+            .addComponent(numberOfMinesLabel).addComponent(numberOfMinesSelector)
+            .addGroup(customGamePanelLayout.createSequentialGroup()
+                .addComponent(playCustomGameButton)
+                .addComponent(mainMenuButton)));
+
+    cardLayout = new CustomCardLayout();
+
+    basePanel = new JPanel(cardLayout);
 
     basePanel.add(menuPanel, MENU);
     basePanel.add(gamePanel, GAME);
+    basePanel.add(customGamePanel, CUSTOM_GAME);
+
+    frame = new JFrame(GAME_NAME);
 
     frame.setContentPane(basePanel);
 
     uiController.addFrame(frame);
 
     frame.setLocationByPlatform(true);
+
+    frame.pack();
 
     this.showMenuPanel();
 
@@ -209,20 +298,36 @@ public class GameView {
 
   public void showMenuPanel() {
 
-    gamePanel.setPreferredSize(null);
-    menuPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
-
     cardLayout.show(basePanel, MENU);
 
-    frame.pack();
+    resetMinimumSize();
 
   }
 
   public void showGamePanel() {
 
-    menuPanel.setPreferredSize(null);
-
     cardLayout.show(basePanel, GAME);
+
+    resetMinimumSize();
+
+  }
+
+  public void showCustomGamePanel() {
+
+    cardLayout.show(basePanel, CUSTOM_GAME);
+
+    resetMinimumSize();
+
+  }
+
+  private void resetMinimumSize() {
+
+    Insets insets = frame.getInsets();
+
+    Dimension currentCompSize = cardLayout.findCurrentComponent(basePanel).getPreferredSize();
+
+    frame.setMinimumSize(new Dimension(currentCompSize.width + insets.left + insets.right,
+        currentCompSize.height + insets.top + insets.bottom));
 
     frame.pack();
 
